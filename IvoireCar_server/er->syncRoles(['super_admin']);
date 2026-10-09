@@ -1,0 +1,44 @@
+[90m= [39m[34;4mApp\Models\User[39;24m {#8735
+    [34mid[39m: [35m2[39m,
+    [34mname[39m: [32m"[39m[32mAdmin IvoireCar[39m[32m"[39m,
+    [34memail[39m: [32m"[39m[32madmin@ivoirecar.com[39m[32m"[39m,
+    [34mphone[39m: [32m"[39m[32m0500000000[39m[32m"[39m,
+    [34mavatar[39m: [36mnull[39m,
+    [34mrole[39m: [32m"[39m[32mpassenger[39m[32m"[39m,
+    [34memail_verified_at[39m: [36mnull[39m,
+    #[33mpassword[39m: [32m"[39m\$[32m2y[39m\$[32m12[39m\$[32mv/YOXcWp3KfqejSylS.kJewTuMhLL.YenUI5kyD4azdEoECSs6Fpy[39m[32m"[39m,
+    [34mcompany_id[39m: [36mnull[39m,
+    #[33mremember_token[39m: [36mnull[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-09-23 12:30:24[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-09-23 12:30:24[39m[32m"[39m,
+  }
+[90m= [39m[34;4mApp\Models\User[39;24m {#8167
+    [34mid[39m: [35m2[39m,
+    [34mname[39m: [32m"[39m[32mAdmin IvoireCar[39m[32m"[39m,
+    [34memail[39m: [32m"[39m[32madmin@ivoirecar.com[39m[32m"[39m,
+    [34mphone[39m: [32m"[39m[32m0500000000[39m[32m"[39m,
+    [34mavatar[39m: [36mnull[39m,
+    [34mrole[39m: [32m"[39m[32msuper_admin[39m[32m"[39m,
+    [34memail_verified_at[39m: [36mnull[39m,
+    #[33mpassword[39m: [32m"[39m\$[32m2y[39m\$[32m12[39m\$[32mv/YOXcWp3KfqejSylS.kJewTuMhLL.YenUI5kyD4azdEoECSs6Fpy[39m[32m"[39m,
+    [34mcompany_id[39m: [36mnull[39m,
+    #[33mremember_token[39m: [36mnull[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-09-23 12:30:24[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-09-23 12:30:24[39m[32m"[39m,
+    [34mroles[39m: [34;4mIlluminate\Database\Eloquent\Collection[39;24m {#8202
+      [34mall[39m: [
+        [34;4mSpatie\Permission\Models\Role[39;24m {#8197
+          [34mid[39m: [35m1[39m,
+          [34mname[39m: [32m"[39m[32msuper_admin[39m[32m"[39m,
+          [34mguard_name[39m: [32m"[39m[32mweb[39m[32m"[39m,
+          [34mcreated_at[39m: [32m"[39m[32m2026-09-23 12:20:29[39m[32m"[39m,
+          [34mupdated_at[39m: [32m"[39m[32m2026-09-23 12:20:29[39m[32m"[39m,
+          [34mpivot[39m: [34;4mIlluminate\Database\Eloquent\Relations\MorphPivot[39;24m {#8708
+            [34mmodel_type[39m: [32m"[39m[32mApp[39m\\[32mModels[39m\\[32mUser[39m[32m"[39m,
+            [34mmodel_id[39m: [35m2[39m,
+            [34mrole_id[39m: [35m1[39m,
+          },
+        },
+      ],
+    },
+  }
