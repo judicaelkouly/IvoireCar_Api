@@ -32,17 +32,23 @@ class ScheduleTemplateController extends Controller
     /**
      * Liste des horaires récurrents programmés par la compagnie
      */
-    public function index(Request $request)
-    {
-        $companyId = $request->user()->company_id;
+   public function index(Request $request)
+{
+    $companyId = $request->user()?->company_id ?? $request->query('company_id');
 
-        $templates = ScheduleTemplate::where('company_id', $companyId)
-            ->with(['route.stops', 'departureStation', 'bus', 'driver'])
-            ->orderBy('departure_time', 'asc') // Indispensable pour l'ordre des départs
-            ->get();
+    $query = ScheduleTemplate::query();
 
-        return response()->json($this->formatTemplates($templates));
+    if ($companyId) {
+        $query->where('company_id', $companyId);
     }
+
+    $templates = $query->with(['route.stops', 'departureStation', 'bus', 'driver'])
+        ->orderBy('departure_time', 'asc')
+        ->get();
+
+    return response()->json($this->formatTemplates($templates));
+}
+
 
     /**
      * Afficher un horaire récurrent spécifique

@@ -130,7 +130,7 @@ class AuthController extends Controller
         ], 400);
     }
 
-    // Validation et changement du mot de passe
+    // Validation et changement du mot de passe (via lien reçu par email)
     public function resetPassword(ResetPasswordRequest $request)
     {
         $status = Password::reset(
@@ -168,12 +168,10 @@ class AuthController extends Controller
             'name'     => 'nullable|string|max:255',
             'email'    => ['sometimes', 'required', 'email', Rule::unique('users')->ignore($user->id)],
             'phone'    => ['sometimes', 'required', 'string', Rule::unique('users')->ignore($user->id)],
-            'password' => 'nullable|string|min:8',
             'avatar'   => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048', // Max 2 Mo
         ], [
             'email.unique'  => 'Cette adresse e-mail est déjà utilisée.',
             'phone.unique'  => 'Ce numéro de téléphone est déjà associé à un compte.',
-            'password.min'  => 'Le mot de passe doit contenir au moins 8 caractères.',
             'avatar.image'  => 'Le fichier doit être une image.',
             'avatar.mimes'  => 'Formats acceptés : jpeg, jpg, png, webp.',
             'avatar.max'    => 'L\'image ne doit pas dépasser 2 Mo.',
@@ -209,10 +207,6 @@ class AuthController extends Controller
             $user->phone = $validated['phone'];
         }
 
-        if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
-        }
-
         // Sauvegarde des modifications en base de données
         $user->save();
 
@@ -226,13 +220,45 @@ class AuthController extends Controller
                 'prenoms'    => $prenomsInput ?? '',
                 'email'      => $user->email,
                 'phone'      => $user->phone,
-                'role'       => $user->role, // Utilise l'accessor $user->role défini dans votre modèle
+                'role'       => $user->getRoleNames()->first() ?? 'passenger',
                 'avatar_url' => $user->avatar ? Storage::url($user->avatar) : null,
                 'company_id' => $user->company_id,
             ]
         ]);
     }
 
+    // Modification du mot de passe de l'utilisateur connecté
+    public function updatePassword(Request $request)
+    {
+        $user = $request->user();
+
+        // 1. Validation de la demande
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'password'         => 'required|string|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Le mot de passe actuel est obligatoire.',
+            'password.required'         => 'Le nouveau mot de passe est obligatoire.',
+            'password.min'              => 'Le nouveau mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed'        => 'La confirmation du mot de passe ne correspond pas.',
+        ]);
+
+        // 2. Vérification de l'ancien mot de passe
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return response()->json([
+                'message' => 'Le mot de passe actuel saisi est incorrect.'
+            ], 422);
+        }
+
+        // 3. Mise à jour du nouveau mot de passe
+        $user->forceFill([
+            'password' => Hash::make($validated['password']),
+        ])->save();
+
+        return response()->json([
+            'message' => 'Votre mot de passe a été modifié avec succès.'
+        ], 200);
+    }
 
     // Déconnexion
     public function logout(Request $request)

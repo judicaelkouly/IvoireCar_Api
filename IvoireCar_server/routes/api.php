@@ -41,12 +41,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::put('/profile/update', [AuthController::class, 'updateProfile']);
     Route::post('/profile/update', [AuthController::class, 'updateProfile']);
+    Route::post('/profile/update-password', [AuthController::class, 'updatePassword']);
 
     // Passager
     Route::post('/bookings', [BookingController::class, 'store']);
-    Route::get('/my-bookings', [BookingController::class, 'myBookings']);
     Route::post('/parcels', [ParcelController::class, 'store']);
     Route::get('/my-parcels', [ParcelController::class, 'myParcels']);
+    Route::get('/my-reservations', [BookingController::class, 'userReservations']);
+
 
     // ------------------------------------------
     // ESPACE SUPER ADMIN

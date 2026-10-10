@@ -61,6 +61,30 @@ class BookingController extends Controller
     }
 
     /**
+     * CLIENT : Récupérer les réservations de l'utilisateur connecté
+     */
+    public function userReservations(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        $reservations = Reservation::with([
+            'company:id,name,email,phone,logo',
+            'departureStation:id,name,city',
+            'destinationStation:id,name,city',
+            'route:id,name',
+            'scheduleTemplate'
+        ])
+        ->where('user_id', $userId)
+        ->latest()
+        ->paginate($request->get('per_page', 10));
+
+        return response()->json([
+            'success' => true,
+            'data'    => $reservations,
+        ], 200);
+    }
+
+    /**
      * SUPER ADMIN : Récupérer toutes les réservations avec leurs informations complètes
      */
     public function allReservations(Request $request)
@@ -116,3 +140,4 @@ class BookingController extends Controller
         ], 200);
     }
 }
+
