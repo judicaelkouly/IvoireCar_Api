@@ -112,6 +112,29 @@ class CompanyController extends Controller
         });
     }
 
+    public function show(Company $company)
+    {
+        // On récupère la compagnie avec son administrateur principal (rôle company_admin)
+        $admin = $company->users()->role('company_admin')->first();
+
+        return response()->json([
+            'id' => $company->id,
+            'name' => $company->name,
+            'phone' => $company->phone,
+            'email' => $company->email,
+            'logo' => $company->logo,
+            'images' => $company->images,
+            'is_active' => $company->is_active,
+            'admin' => $admin ? [
+                'id' => $admin->id,
+                'nom' => explode(' ', $admin->name)[0] ?? $admin->name,
+                'prenoms' => implode(' ', array_slice(explode(' ', $admin->name), 1)) ?? '',
+                'email' => $admin->email,
+                'phone' => $admin->phone,
+            ] : null
+        ], 200);
+    }
+
     // Activer / Désactiver une compagnie (Blocage d'accès)
     public function toggleStatus(Company $company)
     {

@@ -64,9 +64,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/admin/parcels', [ParcelController::class, 'allParcels']);
 
         Route::get('/companies/details/{company}', [CompanyController::class, 'show360']);
+        Route::get('/companies/{company}', [CompanyController::class, 'show']);
         Route::post('/companies', [CompanyController::class, 'store']);
         Route::delete('/companies/{company}', [CompanyController::class, 'destroy']);
-        Route::match(['put', 'post'], '/companies/{company}', [CompanyController::class, 'update']);
+        Route::match(['put', 'post'], '/companies/update/{company}', [CompanyController::class, 'update']);
         Route::patch('/companies/{company}/toggle-status', [CompanyController::class, 'toggleStatus']);
     });
 
