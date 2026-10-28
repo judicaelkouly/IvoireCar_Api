@@ -40,7 +40,7 @@ class StationController extends Controller
     }
 
     /**
-     * Création d'une gare
+     * Création d'une gare (Chef de gare obligatoire)
      */
     public function store(Request $request)
     {
@@ -57,12 +57,13 @@ class StationController extends Controller
             'city' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:50',
-            'manager_id' => 'nullable|exists:users,id',
+            'manager_id' => 'required|exists:users,id', // Modifié en 'required'
         ], [
             'name.required' => 'Le nom de la gare est obligatoire.',
             'city.required' => 'La ville est obligatoire.',
             'address.required' => 'L\'adresse est obligatoire.',
             'phone.required' => 'Le numéro de téléphone est obligatoire.',
+            'manager_id.required' => 'L\'affectation d\'un chef de gare est obligatoire.',
             'manager_id.exists' => 'Le chef de gare sélectionné est invalide.',
         ]);
 
@@ -71,29 +72,29 @@ class StationController extends Controller
             'city' => $validated['city'],
             'address' => $validated['address'],
             'phone' => $validated['phone'],
-            'user_id' => $validated['manager_id'] ?? null,
+            'user_id' => $validated['manager_id'], // Obligatoire
             'company_id' => $admin->company_id,
         ]);
 
         return response()->json([
-            'message' => 'Gare créée avec succès !',
+            'message' => 'Gare créée avec succès et assignée au chef de gare !',
             'station' => $station->load('manager:id,name,email,phone'),
         ], 201);
     }
 
-        public function show($id)
+    public function show($id)
     {
-        $station = Station::findOrFail($id);
+        $station = Station::with('manager:id,name,email,phone')->findOrFail($id);
         return response()->json(['data' => $station]);
     }
-        /**
+
+    /**
      * Mise à jour d'une gare
      */
     public function update(Request $request, Station $station)
     {
         $admin = $request->user();
 
-        // Vérification de sécurité : la gare doit appartenir à la compagnie de l'admin
         if ($station->company_id !== $admin->company_id) {
             return response()->json([
                 'message' => 'Action non autorisée sur cette gare.'
@@ -105,12 +106,13 @@ class StationController extends Controller
             'city' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:50',
-            'manager_id' => 'nullable|exists:users,id',
+            'manager_id' => 'required|exists:users,id', // Obligatoire aussi à la modification
         ], [
             'name.required' => 'Le nom de la gare est obligatoire.',
             'city.required' => 'La ville est obligatoire.',
             'address.required' => 'L\'adresse est obligatoire.',
             'phone.required' => 'Le numéro de téléphone est obligatoire.',
+            'manager_id.required' => 'L\'affectation d\'un chef de gare est obligatoire.',
             'manager_id.exists' => 'Le chef de gare sélectionné est invalide.',
         ]);
 
@@ -119,7 +121,7 @@ class StationController extends Controller
             'city' => $validated['city'],
             'address' => $validated['address'],
             'phone' => $validated['phone'],
-            'user_id' => $validated['manager_id'] ?? null,
+            'user_id' => $validated['manager_id'],
         ]);
 
         return response()->json([

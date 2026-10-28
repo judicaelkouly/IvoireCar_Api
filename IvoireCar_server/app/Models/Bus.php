@@ -13,12 +13,18 @@ class Bus extends Model
         'capacity',
         'status',
         'company_id',
+        'station_id', // <--- Ajouté pour lier le bus à une gare spécifique
         'user_id', // Chauffeur principal (driver)
     ];
 
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function station(): BelongsTo
+    {
+        return $this->belongsTo(Station::class);
     }
 
     public function driver(): BelongsTo

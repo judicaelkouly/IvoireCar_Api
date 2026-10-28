@@ -30,6 +30,7 @@ class User extends Authenticatable
         'role',
         'password',
         'company_id',
+        'station_id',
     ];
 
     /**
@@ -66,5 +67,9 @@ class User extends Authenticatable
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+    public function station(): BelongsTo
+    {
+        return $this->belongsTo(Station::class, 'station_id');
     }
 }
